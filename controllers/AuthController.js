@@ -56,13 +56,13 @@ exports.signup = async(req, res)=> {
         }
 
         const User = await user.create({
-            name, email, password:hashedPassword, role
+            name, email,mobileNumber, password:hashedPassword, image, role
         })
 
         return res.status(200).json({
             success: true,
             User,
-            message: "user created successfully ✅"
+            message: "user created successfully"
         })
     } catch (error) {
         console.error(error)
@@ -78,9 +78,9 @@ exports.login = async(req, res)=> {
 
     try {
         //data fetch
-        const {mobileNumber, password} = req.body
+        const {email, password} = req.body
         //validation on email and password
-        if(!mobileNumber || !password){
+        if(!email || !password){
             return res.status(400).json({
                 success:false,
                 message: "Plz fill all the details carefully"
@@ -88,7 +88,7 @@ exports.login = async(req, res)=> {
         }
 
         //check for registered User
-        let User= await  user.findOne({mobileNumber})
+        let User= await  user.findOne({email}).select('+password');
         //if user not registered or not found in database
         if(!User){
             return res.status(401).json({
@@ -135,7 +135,7 @@ exports.login = async(req, res)=> {
             //password donot matched
             return res.status(403).json({
                 success: false,
-                message: "Password incorrects"
+                message: "Password incorrect"
             })
         }
 
@@ -148,6 +148,7 @@ exports.login = async(req, res)=> {
     }
 
 }
+
 
 // Send OTP For Email Verification
 exports.sendotp = async (req, res) => {
