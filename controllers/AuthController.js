@@ -10,6 +10,8 @@ exports.signup = async(req, res)=> {
         //get input data
         const {name, email, password, mobileNumber, role, otp}= req.body
 
+        const image = req.file.originalname;
+
         // Check if All Details are there or not
 		if (!name || !email || !password || !mobileNumber | !otp) {
 			return res.status(403).send({
